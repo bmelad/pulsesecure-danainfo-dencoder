@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv='Content-Type' content='text/html' />
+	<meta name="description" content="This utility will decode & encode the DanaInfo value of PulseSecure PCS rewritten links." />
+	<meta name="keywords" content="PulseSecure, Pulse Connect Secure, PCS, DanaInfo, Decode, Encode, Decoder, Encoder" />
+	<meta name="copyright" content="Elad Ben-Matityahu" />
+	<meta name="author" content="Elad Ben-Matityahu" />
+	<meta name="rating" content="General" />
+	<meta name="webmaster" content="General" />
+	<title>Pulse Secure PCS DanaInfo Decoder & Encoder</title>
+	<script type="text/javascript">		
+		var charset = '0123456789-.ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+		function left(j, k) { for(; k > 0; k--) { j--; if(j < 0) j = charset.length - 1; } return charset[j]; }
+		function right(j, k){ for(; k > 0; k--) { j++; if(j >= charset.length) j = 0; } return charset[j]; }
+		function parseDanaInfo() {
+			var danaInfo = document.getElementById('txt-content').value;
+			danaInfo = danaInfo.substring(2);
+			var parsed = '', j, c;
+			for(var i = 0; i < danaInfo.length; i++) {
+				c = danaInfo[i];
+				if (c == '+') break;;
+				if (c != ':' && c != '/') {
+					j = charset.indexOf(c);
+					c = left(j,i);
+				}
+				parsed += c;
+			}
+			document.getElementById('txt-output').value = parsed;
+		}
+		
+		function GenerateDanaInfo() {
+			var hostname = document.getElementById('txt-content').value;
+			var parsed = '.a', j, c;
+			for(var i = 0; i < hostname.length; i++) {
+				c = hostname[i];
+				if (c == '+') break;;
+				if (c != ':' && c != '/') {
+					j = charset.indexOf(c);
+					c = right(j,i);
+				}
+				parsed += c;
+			}
+			document.getElementById('txt-output').value = parsed;
+		}
+		
+		function contentFocus() { if (document.getElementById('txt-content').value == 'Paste your input here...') document.getElementById('txt-content').value = ''; }
+		function contentFocusOut() { if (document.getElementById('txt-content').value == '') document.getElementById('txt-content').value = 'Paste your input here...'; }
+	</script>
+	<style type="text/css">
+		h1 { text-align: center; font-family: 'Courier New'; }
+		textarea { width: 95%; height: 100px; font-family: 'Courier New'; font-size: 8pt; }
+		button { font-family: 'Courier New'; font-size: 8pt; height: 18px; width: 200px; }
+		.centered { margin: auto; text-align: center; }
+		p { width: 910px; font-family: 'Courier New'; font-size: 9pt; margin: auto; }
+		span { font-family: 'Courier New'; font-size: 8pt; }
+	</style>
+</head>
+<body>
+	<h1>Pulse Secure PCS DanaInfo Decoder & Encoder</h1>
+	<p>
+		Need to parse / generate a PulseSecure PCS encoded URL? This utility will help you with the DanaInfo (encoded hostname) part.
+		<br /><br />
+		<textarea id="txt-content" onfocus="contentFocus();" onfocusout="contentFocusOut();">Paste your input here...</textarea>
+		<br /><br />
+		<textarea id="txt-output">The output will apprear here after you click the button...</textarea>
+		<div class='centered'>
+			<button onclick='parseDanaInfo()'>Decode</button>
+			<button onclick='GenerateDanaInfo()'>Encode</button>
+		</div>
+		<br /><br />
+	</p>
+	<br />
+	<div class='centered'>
+		<span><strong>DISCLAIMER:</strong> You may use this utility at your own risk & responsibility. The author is not responsible to any possible damages that may occur after using the utility.</span>
+		<br />
+		<span>© <a href="mailto:bmelad@gmail.com">Elad Ben-Matityahu</a></span>
+	</div>
+</body>
+</html>
