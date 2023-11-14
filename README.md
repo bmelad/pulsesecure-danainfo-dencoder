@@ -6,6 +6,7 @@ Need to parse / generate a PulseSecure PCS encoded URL? This utility will help y
 ##  How to use it?
 
 Paste an encoded DanaInfo value or a cleartext hostname and click the Decode or Encode button.
+You may parse an entire encoded URL using the Parse URL button.
 
 
 ##  Disclaimer
