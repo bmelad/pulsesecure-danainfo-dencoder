@@ -47,6 +47,43 @@
 		
 		function contentFocus() { if (document.getElementById('txt-content').value == 'Paste your input here...') document.getElementById('txt-content').value = ''; }
 		function contentFocusOut() { if (document.getElementById('txt-content').value == '') document.getElementById('txt-content').value = 'Paste your input here...'; }
+		
+		function parsePulseSecureURLs() {
+			var url = document.getElementById("txt-content").value.split('\n')[0].trim();
+			var output = '';
+			if (url != '') output += parsePulseSecureURL(url);
+			document.getElementById('txt-output').value = output;
+		}
+		
+		function parsePulseSecureURL(string2convert) { 
+			var pulseHost = string2convert.replace('https://', '').split('/')[0];
+			var backendHost = string2convert.split('DanaInfo=')[1];
+			var trailer = '', port = '';
+  
+			if (backendHost.includes('?')) { trailer = '?' + backendHost.split('?')[1]; backendHost = backendHost.split('?')[0]; }
+			else if (backendHost.includes('+')) trailer = backendHost.split('+')[1];
+			var parsed = 'http://';
+			if (backendHost.includes(',SSL')) parsed = 'https://';
+			if (backendHost.includes(',Port=')) port = ':' + backendHost.split(',Port=')[1].split(',')[0].split('+')[0].replace(trailer, '');
+			backendHost = parseDanaInfoValue(backendHost.split(',')[0]) + port;
+			parsed += backendHost + string2convert.replace('https://' + pulseHost, '').split(',DanaInfo=')[0] + trailer;
+			return parsed;
+		}
+		
+		function parseDanaInfoValue(danaInfo) {
+			danaInfo = danaInfo.substring(2);
+			var parsed = '', j, c;
+			for(var i = 0; i < danaInfo.length; i++) {
+				c = danaInfo[i];
+				if (c == '+') break;;
+				if (c != ':' && c != '/') {
+					j = charset.indexOf(c);
+					c = left(j,i);
+				}
+				parsed += c;
+			}
+			return parsed;
+		}
 	</script>
 	<style type="text/css">
 		h1 { text-align: center; font-family: 'Courier New'; }
@@ -68,6 +105,7 @@
 		<div class='centered'>
 			<button onclick='parseDanaInfo()'>Decode</button>
 			<button onclick='GenerateDanaInfo()'>Encode</button>
+			<button onclick='parsePulseSecureURLs()'>Parse URL</button>
 		</div>
 		<br /><br />
 	</p>
